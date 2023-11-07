@@ -19,7 +19,7 @@ class AppointmentManager {
         }
 
         fun getAppointmentInformation(context: Context, successFunction: (response: String) -> (Unit), failureFunction: () -> (Unit)) {
-            var url = "https://zachnology.com/.netlify/functions/apphomedata"
+            var url = Constants.URL_ROOT + "/.netlify/functions/apphomedata"
             if(IdentityManager.token != null) {
                 val queue = Volley.newRequestQueue(context)
                 val stringRequest = object : StringRequest(
@@ -63,7 +63,7 @@ class AppointmentManager {
 
         fun requestAppointment(context: Context, category: String, description: String, contactMethod: String, successFunction: (response: String) -> Unit, failureFunction: () -> Unit) {
             val queue = Volley.newRequestQueue(context)
-            var url = "https://zachnology.com/api/newappointment"
+            var url = Constants.URL_ROOT + "/api/newappointment"
             val stringRequest = object : StringRequest(
                 Method.POST, url,
                 { response ->
