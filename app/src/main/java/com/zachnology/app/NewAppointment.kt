@@ -37,7 +37,7 @@ class NewAppointment : AppCompatActivity() {
         submitButton.setOnClickListener() {
             var submittingDialog = MaterialAlertDialogBuilder(
                 this,
-                com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered
+                R.style.Base_Theme_Zachnology_AlertDialog
             )
                 .setTitle("Submitting")
                 .setMessage("Your appointment request is being submitted. Please wait...")
@@ -52,7 +52,7 @@ class NewAppointment : AppCompatActivity() {
                     submittingDialog.dismiss()
                     MaterialAlertDialogBuilder(
                         this,
-                        com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered
+                        R.style.Base_Theme_Zachnology_AlertDialog
                     )
                         .setTitle("Submitted")
                         .setMessage("Appointment requested successfully. Please wait to hear from a Zachnology representative to finalize your appointment")

@@ -15,8 +15,12 @@
         android:theme="@style/Theme.Zachnology"
         tools:targetApi="31">
         <activity
-            android:name=".NewAppointment"
+            android:name=".EditAppointment"
             android:exported="false" />
+        <activity
+            android:name=".NewAppointment"
+            android:exported="false"
+            android:theme="@style/Theme.Zachnology.NoNavigationBar"/>
         <activity
             android:name=".AuthenticationActivity"
             android:exported="false" />

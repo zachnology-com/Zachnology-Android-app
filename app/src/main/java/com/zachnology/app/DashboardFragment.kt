@@ -2,23 +2,15 @@ package com.zachnology.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Identity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.android.volley.AuthFailureError
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.json.JSONObject
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -80,7 +72,7 @@ class DashboardFragment : Fragment() {
         }
         else {
             activity?.let {
-                AppointmentManager.getAppointmentInformation(it.baseContext, { response ->
+                AppointmentManager.getAllAppointments(it.baseContext, { response ->
                     welcometext.text = "Hello, " + IdentityManager.name + "!"
                     numOfPending.text = AppointmentManager.numberOfPendingAppointments.toString()
                     numOfConfirmed.text = AppointmentManager.numberOfConfirmedAppointments.toString()

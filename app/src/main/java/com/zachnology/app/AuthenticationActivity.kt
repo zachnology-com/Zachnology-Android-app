@@ -1,5 +1,6 @@
 package com.zachnology.app
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
@@ -20,13 +21,14 @@ class AuthenticationActivity : AppCompatActivity() {
         var storedEmail = sharedPref.getString("email", null)
         var storedPassword = sharedPref.getString("password", null)
 
+
         if(storedEmail == null || storedPassword == null) {
             cover.visibility = android.view.View.GONE
             loading.visibility = android.view.View.GONE
         }
         else {
             IdentityManager.loginWithCredentials(storedEmail, storedPassword, this,{response ->
-                AppointmentManager.getAppointmentInformation(this, {response ->
+                AppointmentManager.getAllAppointments(this, { response ->
                     val intent = android.content.Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -54,7 +56,7 @@ class AuthenticationActivity : AppCompatActivity() {
                 statusText.text = "Logged in!"
                 cover.visibility = android.view.View.VISIBLE
                 loading.visibility = android.view.View.VISIBLE
-                AppointmentManager.getAppointmentInformation(this, {response ->
+                AppointmentManager.getAllAppointments(this, { response ->
                     val intent = android.content.Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()

@@ -1,5 +1,7 @@
 package com.zachnology.app
 
+import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Html
@@ -7,7 +9,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
+
 
 class PendingAppointments : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,10 +22,18 @@ class PendingAppointments : AppCompatActivity() {
         var appointmentsListView = findViewById<LinearLayout>(R.id.appointmentList)
 
         for(i in AppointmentManager.pendingAppointments) {
-            var appointmentButton = CardView(this)
+            var appointmentButton = MaterialCardView(this, null, com.google.android.material.R.style.Widget_Material3_CardView_Outlined)
             appointmentButton.elevation = 10F
-            appointmentButton.radius = 10F
-//            appointmentButton.setContentPadding(30, 30, 30, 30)
+//            appointmentButton.background = getDrawable(R.drawable.shadow_background)
+            appointmentButton.radius = 50F
+//            appointmentButton.strokeWidth = 2
+            appointmentButton.strokeColor = Color.parseColor("#000000")
+            appointmentButton.setOnClickListener() {
+                val intent = Intent(this, EditAppointment::class.java)
+                intent.putExtra("id", i.appointmentId)
+                startActivity(intent)
+            }
+
             var params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -39,7 +51,7 @@ class PendingAppointments : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            categoryParams.setMargins(40, 30, 30, 15)
+            categoryParams.setMargins(60, 50, 30, 15)
             appointmentCategory.layoutParams = categoryParams
             appointmentCategory.textSize = 20F
             appointmentCategory.setTypeface(null, Typeface.BOLD)
@@ -49,7 +61,7 @@ class PendingAppointments : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            descriptionParams.setMargins(40, 15, 30, 30)
+            descriptionParams.setMargins(60, 15, 40, 30)
             appointmentDescription.layoutParams = descriptionParams
             appointmentDescription.text = i.description
 
@@ -58,7 +70,7 @@ class PendingAppointments : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            contactMethodParams.setMargins(40, 15, 30, 30)
+            contactMethodParams.setMargins(60, 15, 30, 30)
             appointmentContactMethod.layoutParams = contactMethodParams
             var contactMethodText = "<b>Contact Method: </b>" + i.contactMethod
             appointmentContactMethod.setText(Html.fromHtml(contactMethodText));
@@ -69,7 +81,7 @@ class PendingAppointments : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            dateSubmittedParams.setMargins(40, 15, 30, 30)
+            dateSubmittedParams.setMargins(60, 15, 30, 50)
             appointmentDateSubmitted.layoutParams = dateSubmittedParams
             val dateFormat = SimpleDateFormat("MMMM d, yyyy")
             val dateSubmittedText = "<b>Date Submitted: </b>" + dateFormat.format(i.dateRequested!!.time)

@@ -30,7 +30,7 @@ class IdentityManager {
         fun loginWithCredentials(email:String, password:String, context: Context, successFunction: (response: String) -> (Unit), failureFunction: () -> (Unit)) {
             var queue = Volley.newRequestQueue(context)
             var identityUrl =
-                "https://zachnology.com/.netlify/identity/token?grant_type=password&username=" + email + "&password=" + password;
+                Constants.URL_ROOT + "/.netlify/identity/token?grant_type=password&username=" + email + "&password=" + password;
             var success = false
             val stringRequest = StringRequest(
                 Request.Method.POST, identityUrl,

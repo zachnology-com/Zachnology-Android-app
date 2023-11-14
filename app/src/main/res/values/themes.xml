@@ -31,4 +31,13 @@
     <style name="Base.Theme.Zachnology.Title">
         <item name="android:fontFamily">@font/sora_semibold</item>
     </style>
+    <style name="Base.Theme.Zachnology.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
+        <item name="android:tint">?attr/colorOnSurface</item>
+    </style>
+    <style name="Base.Theme.Zachnology.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/md_theme_light_nav_background</item>
+    </style>
+    <style name="Base.Theme.Zachnology.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+    </style>
 </resources>

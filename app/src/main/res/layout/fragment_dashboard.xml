@@ -44,7 +44,8 @@
         android:nestedScrollingEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/newappointment">
+        app:layout_constraintTop_toBottomOf="@id/newappointment"
+        app:strokeWidth="2dp">
 
 
         <LinearLayout
@@ -106,7 +107,8 @@
         android:nestedScrollingEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pendingcard">
+        app:layout_constraintTop_toBottomOf="@id/pendingcard"
+        app:strokeWidth="2dp">
 
 
         <LinearLayout
