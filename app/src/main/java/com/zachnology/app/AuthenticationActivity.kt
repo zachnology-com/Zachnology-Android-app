@@ -1,16 +1,26 @@
 package com.zachnology.app
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 
 
 class AuthenticationActivity : AppCompatActivity() {
+    companion object {
+        var hasPassedSplashScreen: Boolean = false
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
         val sharedPref = getSharedPreferences("loginInformation", MODE_PRIVATE)
         val editor = sharedPref.edit()
+        val content: View = findViewById(android.R.id.content)
+        content.viewTreeObserver.addOnPreDrawListener(
+            object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean { return hasPassedSplashScreen}
+            }
+        )
 
         var loginButton = findViewById<android.widget.Button>(R.id.loginButton)
         var statusText = findViewById<android.widget.TextView>(R.id.status)
@@ -25,6 +35,7 @@ class AuthenticationActivity : AppCompatActivity() {
         if(storedEmail == null || storedPassword == null) {
             cover.visibility = android.view.View.GONE
             loading.visibility = android.view.View.GONE
+            hasPassedSplashScreen = true
         }
         else {
             IdentityManager.loginWithCredentials(storedEmail, storedPassword, this,{response ->
@@ -34,12 +45,14 @@ class AuthenticationActivity : AppCompatActivity() {
                     finish()
                 }, {
                     statusText.text = "Login failed!"
+                    hasPassedSplashScreen = true
                     cover.visibility = android.view.View.GONE
                     loading.visibility = android.view.View.GONE
 
                 })
             }, {
                 statusText.text = "Login failed!"
+                hasPassedSplashScreen = true
                 cover.visibility = android.view.View.GONE
                 loading.visibility = android.view.View.GONE
 

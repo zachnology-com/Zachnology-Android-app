@@ -1,20 +1,11 @@
 package com.zachnology.app
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import com.zachnology.app.databinding.ActivityMainBinding
-import org.json.JSONArray
 import org.json.JSONTokener
 
 
@@ -25,6 +16,7 @@ class IdentityManager {
         var email: String? = null
         var password: String? = null
         var name: String? = null
+        var hasPassedSplashScreen: Boolean = false
 
 
         fun loginWithCredentials(email:String, password:String, context: Context, successFunction: (response: String) -> (Unit), failureFunction: () -> (Unit)) {

@@ -1,5 +1,6 @@
 
 <resources>
+    <style name="Theme.Zachnology" parent="Base.Theme.Zachnology"></style>
     <style name="Base.Theme.Zachnology" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
@@ -40,4 +41,5 @@
     <style name="Base.Theme.Zachnology.BottomNavigation.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">?attr/colorPrimaryContainer</item>
     </style>
+
 </resources>
