@@ -13,9 +13,14 @@ class AppointmentManager {
         var numberOfPendingAppointments: Int? = null
         var numberOfConfirmedAppointments: Int? = null
         var pendingAppointments: ArrayList<PendingAppointment> = ArrayList()
+        var confirmedAppointments: ArrayList<ConfirmedAppointment> = ArrayList()
 
         fun addPendingAppointment(pendingAppointment: PendingAppointment) {
             pendingAppointments?.add(pendingAppointment)
+        }
+
+        fun addConfirmedAppointment(confirmedAppointment: ConfirmedAppointment) {
+            confirmedAppointments?.add(confirmedAppointment)
         }
 
         fun getAllAppointments(
@@ -29,29 +34,55 @@ class AppointmentManager {
                 val stringRequest = object : StringRequest(Method.GET, url, { response ->
                     val fullObject = JSONTokener(response).nextValue() as JSONObject
                     IdentityManager.name = fullObject.getString("name")
-                    AppointmentManager.numberOfPendingAppointments =
-                        fullObject.getInt("numOfPending")
-                    AppointmentManager.numberOfConfirmedAppointments =
-                        fullObject.getInt("numOfConfirmed")
-                    AppointmentManager.hasHomeScreenData = true
+                    numberOfPendingAppointments = fullObject.getInt("numOfPending")
+                    numberOfConfirmedAppointments = fullObject.getInt("numOfConfirmed")
 
-                    val pendingAppointments = fullObject.getJSONArray("pendingAppointments")
-                    AppointmentManager.pendingAppointments = ArrayList()
-                    for (i in 0 until pendingAppointments.length()) {
-                        var pendingAppointment = pendingAppointments.getJSONObject(i)
-                        var pendingAppointmentObject = PendingAppointment(
-                            pendingAppointment.getString("appointmentId"),
-                            pendingAppointment.getString("category"),
-                            pendingAppointment.getString("description"),
-                            pendingAppointment.getString("contactmethod"),
-                            pendingAppointment.getLong("datesubmitted")
-                        )
-                        addPendingAppointment(pendingAppointmentObject)
+                    try {
+                        val pendingAppointments = fullObject.getJSONArray("pendingAppointments")
+                        AppointmentManager.pendingAppointments = ArrayList()
+                        for (i in 0 until pendingAppointments.length()) {
+                            try {
+                                var pendingAppointment = pendingAppointments.getJSONObject(i)
+                                var pendingAppointmentObject = PendingAppointment(
+                                    pendingAppointment.getString("appointmentId"),
+                                    pendingAppointment.getString("category"),
+                                    pendingAppointment.getString("description"),
+                                    pendingAppointment.getString("contactmethod"),
+                                    pendingAppointment.getLong("datesubmitted")
+                                )
+                                addPendingAppointment(pendingAppointmentObject)
+                            } catch (e: Exception) { }
+                        }
+                        val confirmedAppointments = fullObject.getJSONArray("confirmedAppointments")
+                        AppointmentManager.confirmedAppointments = ArrayList()
+                        for (i in 0 until pendingAppointments.length()) {
+                            try {
+                                var confirmedAppointment = confirmedAppointments.getJSONObject(i)
+                                var confirmedAppointmentObject = ConfirmedAppointment(
+                                    confirmedAppointment.getString("appointmentId"),
+                                    confirmedAppointment.getString("category"),
+                                    confirmedAppointment.getString("description"),
+                                    confirmedAppointment.getString("contactmethod"),
+                                    confirmedAppointment.getLong("datesubmitted"),
+                                    confirmedAppointment.getLong("date"),
+                                    confirmedAppointment.getBoolean("include_time"),
+                                    confirmedAppointment.getString("representativenotes")
+
+                                )
+                                addConfirmedAppointment(confirmedAppointmentObject)
+                            } catch (e: Exception) { }
+                        }
+                        hasHomeScreenData = true
+                        successFunction(response)
+                    } catch (e: Exception) {
+                        hasHomeScreenData = false
+                        failureFunction()
                     }
-                    successFunction(response)
+
 
                 }, {
                     Log.e("Error", it.toString())
+                    hasHomeScreenData = false
                     failureFunction()
                 }) {
                     override fun getHeaders(): MutableMap<String, String> {
@@ -178,7 +209,9 @@ class AppointmentManager {
         }
 
         fun deletePendingAppointment(
-            context: Context, appointmentId: String, successFunction: (response: String) -> (Unit),
+            context: Context,
+            appointmentId: String,
+            successFunction: (response: String) -> (Unit),
             failureFunction: () -> (Unit)
         ) {
             val queue = Volley.newRequestQueue(context)

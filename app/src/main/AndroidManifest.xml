@@ -16,17 +16,25 @@
         tools:targetApi="34">
         <activity
             android:name=".EditAppointment"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Zachnology.NoNavigationBar"/>
         <activity
             android:name=".NewAppointment"
             android:exported="false"
             android:theme="@style/Theme.Zachnology.NoNavigationBar"/>
         <activity
             android:name=".AuthenticationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Zachnology.NoNavigationActionBar"
+            />
         <activity
             android:name=".PendingAppointments"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Zachnology.NoNavigationBar"/>
+        <activity
+            android:name=".ConfirmedAppointments"
+            android:exported="false"
+            android:theme="@style/Theme.Zachnology.NoNavigationBar"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

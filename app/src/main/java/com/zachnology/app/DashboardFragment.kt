@@ -54,6 +54,10 @@ class DashboardFragment : Fragment() {
             val intent = Intent(context, PendingAppointments::class.java)
             startActivity(intent)
         }
+        confirmedButton.setOnClickListener() {
+            val intent = Intent(context, ConfirmedAppointments::class.java)
+            startActivity(intent)
+        }
         newAppointmentButton.setOnClickListener() {
             val intent = Intent(context, NewAppointment::class.java)
             startActivity(intent)
@@ -77,6 +81,8 @@ class DashboardFragment : Fragment() {
                     numOfPending.text = AppointmentManager.numberOfPendingAppointments.toString()
                     numOfConfirmed.text = AppointmentManager.numberOfConfirmedAppointments.toString()
                 }, {
+                    val intent = android.content.Intent(activity?.baseContext, AuthenticationActivity::class.java)
+                    startActivity(intent)
                     activity?.finish()
                 })
             }
