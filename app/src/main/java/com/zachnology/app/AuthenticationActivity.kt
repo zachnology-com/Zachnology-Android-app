@@ -1,10 +1,13 @@
 package com.zachnology.app
 
+import android.content.res.Resources.Theme
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import androidx.appcompat.app.AlertDialog
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
@@ -12,6 +15,7 @@ class AuthenticationActivity : AppCompatActivity() {
     companion object {
         var hasPassedSplashScreen: Boolean = false
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,20 +31,17 @@ class AuthenticationActivity : AppCompatActivity() {
             }
         )
 
-        var loginButton = findViewById<android.widget.Button>(R.id.loginButton)
-        var statusText = findViewById<android.widget.TextView>(R.id.status)
         var cover = findViewById<android.widget.ImageView>(R.id.coverImage)
         var loading = findViewById<android.widget.ProgressBar>(R.id.progressBar)
-        var email = findViewById<android.widget.EditText>(R.id.emailInput)
-        var password = findViewById<android.widget.EditText>(R.id.passwordInput)
         var storedEmail = sharedPref.getString("email", null)
         var storedPassword = sharedPref.getString("password", null)
 
 
         if (storedEmail == null || storedPassword == null) {
-            cover.visibility = android.view.View.GONE
-            loading.visibility = android.view.View.GONE
             hasPassedSplashScreen = true
+            val intent = android.content.Intent(this, SigninActivity::class.java)
+            startActivity(intent)
+            finish()
         } else {
             IdentityManager.loginWithCredentials(storedEmail, storedPassword, this, { response ->
                 AppointmentManager.getAllAppointments(this, { response ->
@@ -64,40 +65,14 @@ class AuthenticationActivity : AppCompatActivity() {
 
                 })
             }, {
-                statusText.text = "Login failed!"
                 hasPassedSplashScreen = true
-                cover.visibility = android.view.View.GONE
-                loading.visibility = android.view.View.GONE
+                val intent = android.content.Intent(this, SigninActivity::class.java)
+                intent.putExtra("status", "Login Failed!")
+                startActivity(intent)
+                finish()
 
             })
         }
 
-
-
-        loginButton.setOnClickListener() {
-            statusText.text = "Logging in..."
-            IdentityManager.loginWithCredentials(
-                email.text.toString(),
-                password.text.toString(),
-                this,
-                { response ->
-                    sharedPref.edit().putString("email", email.text.toString()).commit()
-                    sharedPref.edit().putString("password", password.text.toString()).commit()
-                    statusText.text = "Logged in!"
-                    cover.visibility = android.view.View.VISIBLE
-                    loading.visibility = android.view.View.VISIBLE
-                    AppointmentManager.getAllAppointments(this, { response ->
-                        val intent = android.content.Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }, {
-                        statusText.text = "Login failed!"
-                        cover.visibility = android.view.View.GONE
-                        loading.visibility = android.view.View.GONE
-
-                    })
-                },
-                { statusText.text = "Login failed!" })
-        }
     }
 }

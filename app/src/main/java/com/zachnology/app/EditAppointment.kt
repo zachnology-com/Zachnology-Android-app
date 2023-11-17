@@ -65,7 +65,7 @@ class EditAppointment : AppCompatActivity() {
         toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.delete -> {
-                    var comfirmDialog = MaterialAlertDialogBuilder(
+                    var confirmDialog = MaterialAlertDialogBuilder(
                         this,
                         R.style.Base_Theme_Zachnology_AlertDialog
                     )
