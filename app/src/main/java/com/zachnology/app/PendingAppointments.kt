@@ -31,13 +31,15 @@ class PendingAppointments : AppCompatActivity() {
             var appointmentButton = MaterialCardView(this, null, com.google.android.material.R.style.Widget_Material3_CardView_Outlined)
             appointmentButton.elevation = 10F
             appointmentButton.radius = 50F
-            appointmentButton.strokeColor = Color.parseColor("#000000")
+            appointmentButton.strokeWidth = 3
+            appointmentButton.strokeColor = Color.parseColor("#e8e8e8")
             appointmentButton.setOnClickListener() {
                 val intent = Intent(this, EditAppointment::class.java)
                 intent.putExtra("id", i.appointmentId)
                 startActivity(intent)
             }
             appointmentButton.isLongClickable = true
+
 
 
             var params = LinearLayout.LayoutParams(
@@ -183,7 +185,8 @@ class PendingAppointments : AppCompatActivity() {
             true
         }
         popup.setOnDismissListener {
-            buttonView.strokeWidth = 0
+            buttonView.strokeWidth = 3
+            buttonView.strokeColor = Color.parseColor("#e8e8e8")
 //            appointmentButton.setCardBackgroundColor(Color.GRAY)
         }
         // Show the popup menu.
