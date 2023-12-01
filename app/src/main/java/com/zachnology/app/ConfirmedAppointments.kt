@@ -29,9 +29,9 @@ class ConfirmedAppointments : AppCompatActivity() {
 //            appointmentButton.strokeWidth = 2
             appointmentButton.strokeColor = Color.parseColor("#000000")
             appointmentButton.setOnClickListener() {
-                val intent = Intent(this, EditAppointment::class.java)
-                intent.putExtra("id", i.appointmentId)
-                startActivity(intent)
+//                val intent = Intent(this, EditAppointment::class.java)
+//                intent.putExtra("id", i.appointmentId)
+//                startActivity(intent)
             }
 
             var params = LinearLayout.LayoutParams(
