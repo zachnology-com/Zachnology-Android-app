@@ -104,7 +104,7 @@ class AppointmentManager {
             failureFunction: () -> Unit
         ) {
             val queue = Volley.newRequestQueue(context)
-            var url = Constants.URL_ROOT + "/api/newappointment"
+            var url = Constants.URL_ROOT + "/api/appointment/pending/new"
             val stringRequest = object : StringRequest(Method.POST, url, { response ->
                 getAllAppointments(context, { response ->
                     successFunction(response)
@@ -140,7 +140,7 @@ class AppointmentManager {
             successFunction: (response: String) -> (Unit),
             failureFunction: () -> (Unit)
         ) {
-            var url = Constants.URL_ROOT + "/api/getpending?id=" + appointmentId
+            var url = Constants.URL_ROOT + "/api/appointment/pending/get?id=" + appointmentId
             if (IdentityManager.token != null) {
                 val queue = Volley.newRequestQueue(context)
                 val stringRequest = object : StringRequest(Method.GET, url, { response ->
@@ -170,7 +170,7 @@ class AppointmentManager {
             failureFunction: () -> (Unit)
         ) {
             val queue = Volley.newRequestQueue(context)
-            var url = Constants.URL_ROOT + "/api/editappointment"
+            var url = Constants.URL_ROOT + "/api/appointment/pending/edit"
             val stringRequest = object : StringRequest(Method.POST, url, { response ->
                 getAllAppointments(context, { response ->
                     for (i in 0 until pendingAppointments.size) {
@@ -215,7 +215,7 @@ class AppointmentManager {
             failureFunction: () -> (Unit)
         ) {
             val queue = Volley.newRequestQueue(context)
-            var url = Constants.URL_ROOT + "/api/deleteappointment"
+            var url = Constants.URL_ROOT + "/api/appointment/pending/delete"
             val stringRequest = object : StringRequest(Method.POST, url, { response ->
                 getAllAppointments(context, { response ->
                     for (i in 0 until pendingAppointments.size) {
