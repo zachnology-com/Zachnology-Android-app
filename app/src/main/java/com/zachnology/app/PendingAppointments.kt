@@ -3,20 +3,15 @@ package com.zachnology.app
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
-import android.text.Html
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
-import androidx.cardview.widget.CardView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.text.SimpleDateFormat
 
 
 class PendingAppointments : AppCompatActivity() {
@@ -25,94 +20,33 @@ class PendingAppointments : AppCompatActivity() {
         setContentView(R.layout.activity_pending_appointments)
 
         var toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        var appointmentsListView = findViewById<LinearLayout>(R.id.appointmentList)
+        var recyclerLayout = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerLayout)
+        var swipeLayout = findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
 
-        for(i in AppointmentManager.pendingAppointments) {
-            var appointmentButton = MaterialCardView(this, null, com.google.android.material.R.style.Widget_Material3_CardView_Outlined)
-            appointmentButton.elevation = 10F
-            appointmentButton.radius = 50F
-            appointmentButton.strokeWidth = 3
-            appointmentButton.strokeColor = Color.parseColor("#e8e8e8")
-            appointmentButton.setOnClickListener() {
-                val intent = Intent(this, EditAppointment::class.java)
-                intent.putExtra("id", i.appointmentId)
+        val customAdapter = PendingAppointmentAdapter(this, AppointmentManager.livePendingAppointments.value!!)
+        recyclerLayout.adapter = customAdapter
+
+        swipeLayout.setOnRefreshListener {
+            AppointmentManager.getAllAppointments(this, {
+                customAdapter.notifyDataSetChanged()
+                recyclerLayout.setAdapter(PendingAppointmentAdapter(this, AppointmentManager.livePendingAppointments.value!!));
+                recyclerLayout.invalidate();
+                swipeLayout.isRefreshing = false
+                println("refreshed")
+            }, {
+                val intent = android.content.Intent(this, SigninActivity::class.java)
+                intent.putExtra("status", "Login Failed!")
                 startActivity(intent)
-            }
-            appointmentButton.isLongClickable = true
-
-
-
-            var params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            params.setMargins(30, 30, 30, 30)
-            appointmentButton.layoutParams = params
-
-            var buttonLayout = LinearLayout(this)
-            buttonLayout.orientation = LinearLayout.VERTICAL
-
-
-            var appointmentCategory = TextView(this)
-            appointmentCategory.text = i.category
-            var categoryParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            categoryParams.setMargins(60, 50, 30, 15)
-            appointmentCategory.layoutParams = categoryParams
-            appointmentCategory.textSize = 20F
-            appointmentCategory.setTypeface(null, Typeface.BOLD)
-
-            var appointmentDescription = TextView(this)
-            var descriptionParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            descriptionParams.setMargins(60, 15, 40, 30)
-            appointmentDescription.layoutParams = descriptionParams
-            appointmentDescription.text = i.description
-
-            var appointmentContactMethod = TextView(this)
-            var contactMethodParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            contactMethodParams.setMargins(60, 15, 30, 30)
-            appointmentContactMethod.layoutParams = contactMethodParams
-            var contactMethodText = "<b>Contact Method: </b>" + i.contactMethod
-            appointmentContactMethod.setText(Html.fromHtml(contactMethodText));
-
-
-            var appointmentDateSubmitted = TextView(this)
-            var dateSubmittedParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            dateSubmittedParams.setMargins(60, 15, 30, 50)
-            appointmentDateSubmitted.layoutParams = dateSubmittedParams
-            val dateFormat = SimpleDateFormat("MMMM d, yyyy")
-            val dateSubmittedText = "<b>Date Submitted: </b>" + dateFormat.format(i.dateRequested!!.time)
-            appointmentDateSubmitted.setText(Html.fromHtml(dateSubmittedText));
-
-            appointmentButton.setOnLongClickListener() {v: View ->
-                appointmentButton.strokeWidth = 4
-                appointmentButton.setStrokeColor(Color.GRAY)
-//                appointmentButton.setCardBackgroundColor
-                showMenu(appointmentCategory, R.menu.pending_appointment_context_menu, appointmentButton, i.appointmentId!!)
-                true
-            }
-
-
-
-            buttonLayout.addView(appointmentCategory)
-            buttonLayout.addView(appointmentDescription)
-            buttonLayout.addView(appointmentContactMethod)
-            buttonLayout.addView(appointmentDateSubmitted)
-            appointmentButton.addView(buttonLayout)
-            appointmentsListView.addView(appointmentButton)
-
+                finish()
+            })
         }
+
+        AppointmentManager.livePendingAppointments.observe(this, {
+            customAdapter.notifyDataSetChanged()
+            recyclerLayout.setAdapter(PendingAppointmentAdapter(this, AppointmentManager.livePendingAppointments.value!!));
+            recyclerLayout.invalidate();
+        })
+
 
 
         toolbar.setNavigationOnClickListener {
