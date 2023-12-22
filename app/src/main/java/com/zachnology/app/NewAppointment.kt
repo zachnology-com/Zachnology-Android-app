@@ -57,11 +57,8 @@ class NewAppointment : AppCompatActivity() {
                         .setTitle("Submitted")
                         .setMessage("Appointment requested successfully. Please wait to hear from a Zachnology representative to finalize your appointment")
                         .setIcon(R.drawable.baseline_check_24)
-                        .setCancelable(false)
+                        .setCancelable(true)
                         .setNeutralButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                            val i = Intent(this, MainActivity::class.java)
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(i)
                             finish()
                         })
                         .show()

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import com.android.volley.toolbox.Volley
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -71,15 +72,15 @@ class DashboardFragment : Fragment() {
 
         if(AppointmentManager.hasHomeScreenData) {
             welcometext.text = "Hello, " + IdentityManager.name + "!"
-            numOfPending.text = AppointmentManager.numberOfPendingAppointments.toString()
-            numOfConfirmed.text = AppointmentManager.numberOfConfirmedAppointments.toString()
+            numOfPending.text = AppointmentManager.livePendingAppointments.value?.size.toString()
+            numOfConfirmed.text = AppointmentManager.liveConfirmedAppointments.value?.size.toString()
         }
         else {
             activity?.let {
                 AppointmentManager.getAllAppointments(it.baseContext, { response ->
                     welcometext.text = "Hello, " + IdentityManager.name + "!"
-                    numOfPending.text = AppointmentManager.numberOfPendingAppointments.toString()
-                    numOfConfirmed.text = AppointmentManager.numberOfConfirmedAppointments.toString()
+                    numOfPending.text = AppointmentManager.livePendingAppointments.value?.size.toString()
+                    numOfConfirmed.text = AppointmentManager.liveConfirmedAppointments.value?.size.toString()
                 }, {
                     val intent = android.content.Intent(activity?.baseContext, AuthenticationActivity::class.java)
                     startActivity(intent)
@@ -87,6 +88,10 @@ class DashboardFragment : Fragment() {
                 })
             }
         }
+
+        AppointmentManager.livePendingAppointments.observe(viewLifecycleOwner, {
+            numOfPending.text = AppointmentManager.livePendingAppointments.value?.size.toString()
+        })
 
 
 

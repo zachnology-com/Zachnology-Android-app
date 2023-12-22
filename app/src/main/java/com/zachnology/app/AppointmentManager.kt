@@ -2,6 +2,7 @@ package com.zachnology.app
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
@@ -10,9 +11,9 @@ import org.json.JSONTokener
 class AppointmentManager {
     companion object {
         var hasHomeScreenData: Boolean = false
-        var numberOfPendingAppointments: Int? = null
-        var numberOfConfirmedAppointments: Int? = null
         var pendingAppointments: ArrayList<PendingAppointment> = ArrayList()
+        val livePendingAppointments : MutableLiveData<ArrayList<PendingAppointment>> =  MutableLiveData<ArrayList<PendingAppointment>>()
+        val liveConfirmedAppointments : MutableLiveData<ArrayList<ConfirmedAppointment>> =  MutableLiveData<ArrayList<ConfirmedAppointment>>()
         var confirmedAppointments: ArrayList<ConfirmedAppointment> = ArrayList()
 
         fun addPendingAppointment(pendingAppointment: PendingAppointment) {
@@ -34,8 +35,6 @@ class AppointmentManager {
                 val stringRequest = object : StringRequest(Method.GET, url, { response ->
                     val fullObject = JSONTokener(response).nextValue() as JSONObject
                     IdentityManager.name = fullObject.getString("name")
-                    numberOfPendingAppointments = fullObject.getInt("numOfPending")
-                    numberOfConfirmedAppointments = fullObject.getInt("numOfConfirmed")
 
                     try {
                         val pendingAppointments = fullObject.getJSONArray("pendingAppointments")
@@ -51,11 +50,12 @@ class AppointmentManager {
                                     pendingAppointment.getLong("datesubmitted")
                                 )
                                 addPendingAppointment(pendingAppointmentObject)
+                                livePendingAppointments.postValue(this.pendingAppointments)
                             } catch (e: Exception) { }
                         }
                         val confirmedAppointments = fullObject.getJSONArray("confirmedAppointments")
                         AppointmentManager.confirmedAppointments = ArrayList()
-                        for (i in 0 until pendingAppointments.length()) {
+                        for (i in 0 until confirmedAppointments.length()) {
                             try {
                                 var confirmedAppointment = confirmedAppointments.getJSONObject(i)
                                 var confirmedAppointmentObject = ConfirmedAppointment(
@@ -70,6 +70,7 @@ class AppointmentManager {
 
                                 )
                                 addConfirmedAppointment(confirmedAppointmentObject)
+                                liveConfirmedAppointments.postValue(this.confirmedAppointments)
                             } catch (e: Exception) { }
                         }
                         hasHomeScreenData = true
@@ -106,6 +107,17 @@ class AppointmentManager {
             val queue = Volley.newRequestQueue(context)
             var url = Constants.URL_ROOT + "/api/appointment/pending/new"
             val stringRequest = object : StringRequest(Method.POST, url, { response ->
+                var appointment = JSONObject(response).getJSONObject("appointment")
+                addPendingAppointment(
+                    PendingAppointment(
+                        appointment.getString("appointmentId"),
+                        appointment.getString("category"),
+                        appointment.getString("description"),
+                        appointment.getString("contactmethod"),
+                        appointment.getLong("datesubmitted")
+                    )
+                )
+                livePendingAppointments.postValue(this.pendingAppointments)
                 getAllAppointments(context, { response ->
                     successFunction(response)
                 }, {
@@ -180,6 +192,7 @@ class AppointmentManager {
                             pendingAppointments[i].contactMethod = contactMethod
                         }
                     }
+                    livePendingAppointments.postValue(this.pendingAppointments)
                     successFunction(response)
                 }, {
                     failureFunction()
@@ -223,6 +236,7 @@ class AppointmentManager {
                             pendingAppointments.removeAt(i)
                         }
                     }
+                    livePendingAppointments.postValue(this.pendingAppointments)
                     successFunction(response)
                 }, {
                     failureFunction()
