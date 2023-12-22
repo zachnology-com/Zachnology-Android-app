@@ -10,8 +10,7 @@ class TestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
         var list = findViewById<ListView>(R.id.thisList)
-        var myArray = arrayOf("hey", "what")
-        val adapter: ArrayAdapter<*> = ArrayAdapter<String>(this, R.layout.list_item, myArray)
+        val adapter: PendingAppointmentAdapter = PendingAppointmentAdapter(this, AppointmentManager.pendingAppointments)
         list.adapter = adapter
 
     }
