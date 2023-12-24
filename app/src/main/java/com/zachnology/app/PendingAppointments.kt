@@ -9,6 +9,7 @@ import android.view.View
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.size
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -26,13 +27,18 @@ class PendingAppointments : AppCompatActivity() {
         val customAdapter = PendingAppointmentAdapter(this, AppointmentManager.livePendingAppointments.value!!)
         recyclerLayout.adapter = customAdapter
 
+        swipeLayout.setColorSchemeResources(R.color.md_theme_light_primary)
+
+
         swipeLayout.setOnRefreshListener {
+            swipeLayout.performHapticFeedback(1)
             AppointmentManager.getAllAppointments(this, {
                 customAdapter.notifyDataSetChanged()
                 recyclerLayout.setAdapter(PendingAppointmentAdapter(this, AppointmentManager.livePendingAppointments.value!!));
                 recyclerLayout.invalidate();
                 swipeLayout.isRefreshing = false
                 println("refreshed")
+//                swipeLayout.performHapticFeedback(1 )
             }, {
                 val intent = android.content.Intent(this, SigninActivity::class.java)
                 intent.putExtra("status", "Login Failed!")
