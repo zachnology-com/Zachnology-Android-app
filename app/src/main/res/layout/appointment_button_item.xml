@@ -8,6 +8,7 @@
     android:layout_marginEnd="12dp"
     android:layout_marginBottom="12dp"
     android:clickable="true"
+    android:elevation="0dp"
     android:ellipsize="end"
     android:longClickable="true"
     android:maxLines="1"
@@ -16,6 +17,8 @@
     android:textAppearance="?attr/textAppearanceTitleMedium"
     app:cardBackgroundColor="?attr/colorSurfaceVariant"
     app:cardCornerRadius="30dp"
+    app:cardElevation="0dp"
+    app:cardMaxElevation="0dp"
     app:circularflow_radiusInDP="30dp"
     app:strokeColor="#e8e8e8"
     app:strokeWidth="0dp">
