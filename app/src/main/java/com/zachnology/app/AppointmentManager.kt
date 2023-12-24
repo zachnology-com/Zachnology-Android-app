@@ -3,6 +3,7 @@ package com.zachnology.app
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
@@ -151,7 +152,7 @@ class AppointmentManager {
             context: Context,
             appointmentId: String,
             successFunction: (response: String) -> (Unit),
-            failureFunction: () -> (Unit)
+            failureFunction: (it: VolleyError) -> (Unit)
         ) {
             var url = Constants.URL_ROOT + "/api/appointment/pending/get?id=" + appointmentId
             if (IdentityManager.token != null) {
@@ -160,8 +161,7 @@ class AppointmentManager {
                     successFunction(response)
 
                 }, {
-                    Log.e("Error", it.toString())
-                    failureFunction()
+                    failureFunction(it)
                 }) {
                     override fun getHeaders(): MutableMap<String, String> {
                         val headers = HashMap<String, String>()

@@ -56,7 +56,57 @@ class EditAppointment : AppCompatActivity() {
                 submitButton.isEnabled = true
             },
             {
-
+                if(it.networkResponse.statusCode == 401 || it.networkResponse.statusCode == 404){
+                    MaterialAlertDialogBuilder(
+                        this,
+                        R.style.Base_Theme_Zachnology_AlertDialog
+                    )
+                        .setTitle("Appointment not found")
+                        .setMessage("This appointment does not exist or you do not have permission to view it.")
+                        .setNegativeButton(
+                            "OK",
+                            DialogInterface.OnClickListener { dialog, which ->
+                                finish()
+                            })
+                        .setOnCancelListener(DialogInterface.OnCancelListener {
+                            finish()
+                        })
+                        .show()
+                }
+                else if(it.networkResponse.statusCode == 503){
+                    MaterialAlertDialogBuilder(
+                        this,
+                        R.style.Base_Theme_Zachnology_AlertDialog
+                    )
+                        .setTitle("Server Unavailable")
+                        .setMessage("Our servers are currently unavailable. Please try again later or contact us for assistance.")
+                        .setNegativeButton(
+                            "OK",
+                            DialogInterface.OnClickListener { dialog, which ->
+                                finish()
+                            })
+                        .setOnCancelListener(DialogInterface.OnCancelListener {
+                            finish()
+                        })
+                        .show()
+                }
+                else{
+                    MaterialAlertDialogBuilder(
+                        this,
+                        R.style.Base_Theme_Zachnology_AlertDialog
+                    )
+                        .setTitle("Unknown Error")
+                        .setMessage("An unknown error occurred. Please try again later.")
+                        .setNegativeButton(
+                            "OK",
+                            DialogInterface.OnClickListener { dialog, which ->
+                                finish()
+                            })
+                        .setOnCancelListener(DialogInterface.OnCancelListener {
+                            finish()
+                        })
+                        .show()
+                }
             })
 
         toolbar.setNavigationOnClickListener() {
