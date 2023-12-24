@@ -2,6 +2,7 @@ package com.zachnology.app
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
@@ -26,9 +27,6 @@ class PendingAppointments : AppCompatActivity() {
 
         val customAdapter = PendingAppointmentAdapter(this, AppointmentManager.livePendingAppointments.value!!)
         recyclerLayout.adapter = customAdapter
-
-        swipeLayout.setColorSchemeResources(R.color.md_theme_light_primary)
-
 
         swipeLayout.setOnRefreshListener {
             swipeLayout.performHapticFeedback(1)
