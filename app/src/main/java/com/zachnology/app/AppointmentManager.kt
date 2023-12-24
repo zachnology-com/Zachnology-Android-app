@@ -8,6 +8,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
 import org.json.JSONTokener
+import java.text.SimpleDateFormat
 
 class AppointmentManager {
     companion object {
@@ -18,6 +19,12 @@ class AppointmentManager {
         val livePendingAppointments : MutableLiveData<ArrayList<PendingAppointment>> =  MutableLiveData<ArrayList<PendingAppointment>>()
         val liveConfirmedAppointments : MutableLiveData<ArrayList<ConfirmedAppointment>> =  MutableLiveData<ArrayList<ConfirmedAppointment>>()
 
+        val dateFormat = SimpleDateFormat("MMMM d, yyyy")
+
+        fun formatDate(date: Long): String {
+            return dateFormat.format(date)
+
+        }
         fun addPendingAppointment(pendingAppointment: PendingAppointment) {
             pendingAppointments?.add(pendingAppointment)
         }
@@ -261,5 +268,6 @@ class AppointmentManager {
             }
             queue.add(stringRequest)
         }
+
     }
 }

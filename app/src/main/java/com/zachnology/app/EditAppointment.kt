@@ -8,6 +8,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -25,6 +26,7 @@ class EditAppointment : AppCompatActivity() {
         val descriptionInput = findViewById<TextInputEditText>(R.id.description_input)
         val contactMethodInput = findViewById<TextInputEditText>(R.id.contact_method_input)
         val coverImage = findViewById<ImageView>(R.id.cover_image)
+        val dateSubmitted = findViewById<TextView>(R.id.date_submitted)
 
         val progressBar = findViewById<ProgressBar>(R.id.progress_bar)
         val submitButton = findViewById<Button>(R.id.request_button)
@@ -51,6 +53,8 @@ class EditAppointment : AppCompatActivity() {
                 (categoryInput)?.setAdapter(adapter)
                 descriptionInput.setText(fullObject.getString("description"))
                 contactMethodInput.setText(fullObject.getString("contactmethod"))
+                dateSubmitted.text = AppointmentManager.formatDate(fullObject.getLong("datesubmitted"))
+
                 progressBar.visibility = ProgressBar.GONE
                 coverImage.visibility = ImageView.GONE
                 submitButton.isEnabled = true
