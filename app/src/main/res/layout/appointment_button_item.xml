@@ -33,6 +33,8 @@
             android:id="@+id/category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/sora_semibold"
             android:text="TextView"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -41,19 +43,28 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="TextView" />
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="TextView"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/contactMethod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="TextView"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/dateSubmitted"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="TextView"
+            android:textSize="15sp" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

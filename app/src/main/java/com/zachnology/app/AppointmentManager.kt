@@ -12,9 +12,10 @@ class AppointmentManager {
     companion object {
         var hasHomeScreenData: Boolean = false
         var pendingAppointments: ArrayList<PendingAppointment> = ArrayList()
+        var confirmedAppointments: ArrayList<ConfirmedAppointment> = ArrayList()
+
         val livePendingAppointments : MutableLiveData<ArrayList<PendingAppointment>> =  MutableLiveData<ArrayList<PendingAppointment>>()
         val liveConfirmedAppointments : MutableLiveData<ArrayList<ConfirmedAppointment>> =  MutableLiveData<ArrayList<ConfirmedAppointment>>()
-        var confirmedAppointments: ArrayList<ConfirmedAppointment> = ArrayList()
 
         fun addPendingAppointment(pendingAppointment: PendingAppointment) {
             pendingAppointments?.add(pendingAppointment)

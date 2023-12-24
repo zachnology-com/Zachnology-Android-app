@@ -92,6 +92,9 @@ class DashboardFragment : Fragment() {
         AppointmentManager.livePendingAppointments.observe(viewLifecycleOwner, {
             numOfPending.text = AppointmentManager.livePendingAppointments.value?.size.toString()
         })
+        AppointmentManager.liveConfirmedAppointments.observe(viewLifecycleOwner, {
+            numOfConfirmed.text = AppointmentManager.liveConfirmedAppointments.value?.size.toString()
+        })
 
 
 

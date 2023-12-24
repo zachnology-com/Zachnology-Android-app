@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 
-class PendingAppointmentAdapter(private val myCon: Context, private val dataSet: ArrayList<PendingAppointment>) :
-    RecyclerView.Adapter<PendingAppointmentAdapter.ViewHolder>() {
+class ConfirmedAppointmentAdapter(private val myCon: Context, private val dataSet: ArrayList<ConfirmedAppointment>) :
+    RecyclerView.Adapter<ConfirmedAppointmentAdapter.ViewHolder>() {
     val dateFormat = SimpleDateFormat("MMMM d, yyyy")
     /**
      * Provide a reference to the type of views that you are using
@@ -54,11 +54,11 @@ class PendingAppointmentAdapter(private val myCon: Context, private val dataSet:
         viewHolder.category.text = dataSet[position].category
         viewHolder.description.text = dataSet[position].description
         viewHolder.contactMethod.text = Html.fromHtml("<b>Contact Method: </b>" + dataSet[position].contactMethod)
-        viewHolder.dateSubmitted.text = Html.fromHtml("<b>Submitted On: </b>" + dateFormat.format(dataSet[position].dateRequested!!.time))
+        viewHolder.dateSubmitted.text = Html.fromHtml("<b>Appointment Date: </b>" + dateFormat.format(dataSet[position].appointmentDate!!.time))
         viewHolder.card.setOnClickListener() {
-                val intent = Intent(myCon, EditAppointment::class.java)
-                intent.putExtra("id", dataSet[position].appointmentId)
-                startActivity(myCon, intent, null)
+            val intent = Intent(myCon, EditAppointment::class.java)
+            intent.putExtra("id", dataSet[position].appointmentId)
+            startActivity(myCon, intent, null)
         }
     }
 
