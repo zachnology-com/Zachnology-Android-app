@@ -1,18 +1,19 @@
 package com.zachnology.app
 
+import android.app.ProgressDialog
 import android.content.DialogInterface
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
 import org.json.JSONTokener
+
 
 class EditAppointment : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,9 +85,7 @@ class EditAppointment : AppCompatActivity() {
                                     this,
                                     R.style.Base_Theme_Zachnology_AlertDialog
                                 )
-                                    .setTitle("Deleting...")
-                                    .setMessage("Your appointment is being deleted. Please wait...")
-                                    .setIcon(R.drawable.outline_delete_24)
+                                    .setView(R.layout.loading)
                                     .setCancelable(false)
                                     .show()
                                 AppointmentManager.deletePendingAppointment(this, appointmentId, {
@@ -102,9 +101,6 @@ class EditAppointment : AppCompatActivity() {
                                         .setNegativeButton(
                                             "OK",
                                             DialogInterface.OnClickListener { dialog, which ->
-                                                val i = Intent(this, MainActivity::class.java)
-                                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                startActivity(i)
                                                 finish()
                                             })
                                         .show()
@@ -123,9 +119,7 @@ class EditAppointment : AppCompatActivity() {
                 this,
                 R.style.Base_Theme_Zachnology_AlertDialog
             )
-                .setTitle("Saving")
-                .setMessage("Your changes are being saved. Please wait...")
-                .setIcon(R.drawable.baseline_cloud_upload_24)
+                .setView(R.layout.loading)
                 .setCancelable(false)
                 .show()
             AppointmentManager.updatePendingAppointment(
@@ -149,11 +143,8 @@ class EditAppointment : AppCompatActivity() {
                                 dialog.dismiss()
                             })
                         .setPositiveButton(
-                            "Return to Home",
+                            "Done",
                             DialogInterface.OnClickListener { dialog, which ->
-                                val i = Intent(this, MainActivity::class.java)
-                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                                startActivity(i)
                                 finish()
                             })
                         .show()

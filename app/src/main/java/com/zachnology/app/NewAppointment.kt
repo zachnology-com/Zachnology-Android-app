@@ -39,9 +39,7 @@ class NewAppointment : AppCompatActivity() {
                 this,
                 R.style.Base_Theme_Zachnology_AlertDialog
             )
-                .setTitle("Submitting")
-                .setMessage("Your appointment request is being submitted. Please wait...")
-                .setIcon(R.drawable.baseline_cloud_upload_24)
+                .setView(R.layout.loading)
                 .setCancelable(false)
                 .show()
             AppointmentManager.requestAppointment(
@@ -59,6 +57,12 @@ class NewAppointment : AppCompatActivity() {
                         .setIcon(R.drawable.baseline_check_24)
                         .setCancelable(true)
                         .setNeutralButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                            finish()
+                        })
+                        .setOnDismissListener(DialogInterface.OnDismissListener {
+                            finish()
+                        })
+                        .setOnCancelListener(DialogInterface.OnCancelListener {
                             finish()
                         })
                         .show()
