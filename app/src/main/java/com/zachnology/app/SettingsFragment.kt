@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import com.google.android.gms.maps.MapView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,12 +37,13 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val infl = inflater.inflate(R.layout.fragment_settings, container, false)
-        var button = infl.findViewById<Button>(R.id.launchAct)
-        button.setOnClickListener() {
-            val intent = android.content.Intent(activity?.baseContext, TestActivity::class.java)
-            startActivity(intent)
-        }
+////        var button = infl.findViewById<Button>(R.id.launchAct)
+//        button.setOnClickListener() {
+//            val intent = android.content.Intent(activity?.baseContext, TestActivity::class.java)
+//            startActivity(intent)
+//        }
         // Inflate the layout for this fragment
+
         return infl
     }
 
