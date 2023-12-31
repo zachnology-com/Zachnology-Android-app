@@ -7,6 +7,7 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.onesignal.OneSignal
+import com.onesignal.debug.LogLevel
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.text.SimpleDateFormat
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat
 class AppointmentManager {
     companion object {
         var hasHomeScreenData: Boolean = false
+        val ONESIGNAL_APP_ID = "d8e33eb7-d25e-4b01-bfe3-95d01ac2a928"
         var pendingAppointments: ArrayList<PendingAppointment> = ArrayList()
         var confirmedAppointments: ArrayList<ConfirmedAppointment> = ArrayList()
 
@@ -45,7 +47,10 @@ class AppointmentManager {
                 val stringRequest = object : StringRequest(Method.GET, url, { response ->
                     val fullObject = JSONTokener(response).nextValue() as JSONObject
                     IdentityManager.name = fullObject.getString("name")
-                    OneSignal.User.addTag("name", fullObject.getString("name"))
+                    var auth_hash = fullObject.getString("auth_hash")
+//                    OneSignal.Debug.logLevel = LogLevel.VERBOSE
+//                    OneSignal.initWithContext(context, ONESIGNAL_APP_ID)
+//                    OneSignal.login(IdentityManager.email.toString(), auth_hash)
 
                     try {
                         val pendingAppointments = fullObject.getJSONArray("pendingAppointments")

@@ -1,10 +1,15 @@
 package com.zachnology.app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
+import com.onesignal.OneSignal
+import com.onesignal.debug.LogLevel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,12 +39,10 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val infl = inflater.inflate(R.layout.fragment_settings, container, false)
-////        var button = infl.findViewById<Button>(R.id.launchAct)
-//        button.setOnClickListener() {
-//            val intent = android.content.Intent(activity?.baseContext, TestActivity::class.java)
-//            startActivity(intent)
-//        }
-        // Inflate the layout for this fragment
+        var button = infl.findViewById<Button>(R.id.button)
+        button.setOnClickListener() {
+            Log.e("OneSignal", OneSignal.User.pushSubscription.id)
+        }
 
         return infl
     }

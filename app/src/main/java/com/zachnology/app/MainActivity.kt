@@ -64,7 +64,13 @@ class MainActivity : AppCompatActivity() {
         var navController = findNavController(R.id.nav_fragment)
         val sharedPref = getSharedPreferences("loginInformation", MODE_PRIVATE)
 
-        askNotificationPermission()
+        OneSignal.Debug.logLevel = LogLevel.VERBOSE
+        OneSignal.initWithContext(this, AppointmentManager.ONESIGNAL_APP_ID)
+        CoroutineScope(Dispatchers.IO).launch {
+            OneSignal.Notifications.requestPermission(true)
+        }
+
+
 
         if(IdentityManager.token == null) {
             val intent = android.content.Intent(this, AuthenticationActivity::class.java)
