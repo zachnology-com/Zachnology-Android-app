@@ -45,6 +45,7 @@ class AuthenticationActivity : AppCompatActivity() {
         } else {
             IdentityManager.loginWithCredentials(storedEmail, storedPassword, this, { response ->
                 AppointmentManager.getAllAppointments(this, { response ->
+
                     val intent = android.content.Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()

@@ -34,7 +34,6 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val infl = inflater.inflate(R.layout.fragment_settings, container, false)
-
 ////        var button = infl.findViewById<Button>(R.id.launchAct)
 //        button.setOnClickListener() {
 //            val intent = android.content.Intent(activity?.baseContext, TestActivity::class.java)
