@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1070458495008",
+    "project_id": "zachnology-be414",
+    "storage_bucket": "zachnology-be414.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070458495008:android:66a0762d6f9e5620e65c45",
+        "android_client_info": {
+          "package_name": "com.zachnology.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070458495008-tof3r474hb1bfi5qbls0ovo7mtljl5re.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS5C4l6Lx2GZ4_I97wKzhEQ8ZPSlI-Apo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070458495008-tof3r474hb1bfi5qbls0ovo7mtljl5re.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
