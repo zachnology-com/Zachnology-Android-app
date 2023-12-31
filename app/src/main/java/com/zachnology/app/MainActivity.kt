@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -12,8 +13,8 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.onesignal.OneSignal
-import com.onesignal.debug.LogLevel
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import com.zachnology.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,6 +66,15 @@ class MainActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("loginInformation", MODE_PRIVATE)
 
         askNotificationPermission()
+        Firebase.messaging.subscribeToTopic("all-alerts")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed"
+                if (!task.isSuccessful) {
+                    msg = "Subscribe failed"
+                }
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            }
+
 
         if(IdentityManager.token == null) {
             val intent = android.content.Intent(this, AuthenticationActivity::class.java)

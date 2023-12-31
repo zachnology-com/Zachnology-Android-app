@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.onesignal.OneSignal
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.text.SimpleDateFormat
@@ -45,8 +44,6 @@ class AppointmentManager {
                 val stringRequest = object : StringRequest(Method.GET, url, { response ->
                     val fullObject = JSONTokener(response).nextValue() as JSONObject
                     IdentityManager.name = fullObject.getString("name")
-                    OneSignal.User.addTag("name", fullObject.getString("name"))
-
                     try {
                         val pendingAppointments = fullObject.getJSONArray("pendingAppointments")
                         AppointmentManager.pendingAppointments = ArrayList()
