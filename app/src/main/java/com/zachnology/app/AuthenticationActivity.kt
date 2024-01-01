@@ -1,5 +1,6 @@
 package com.zachnology.app
 
+import android.content.Context
 import android.content.res.Resources.Theme
 import android.graphics.Color
 import android.os.Bundle

@@ -6,7 +6,10 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.onesignal.OneSignal
+import com.onesignal.common.OneSignalWrapper
+import com.onesignal.core.internal.database.impl.OneSignalDbContract
 import com.onesignal.debug.LogLevel
+import com.onesignal.notifications.bridges.OneSignalHmsEventBridge
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -71,6 +74,40 @@ class IdentityManager {
                     failureFunction()
                 })
             queue.add(stringRequest)
+        }
+
+        fun logout(context: Context) {
+                var coQueue = Volley.newRequestQueue(context)
+                var coUrl = Constants.URL_ROOT + "/.netlify/identity/user"
+                var coRequest = object : StringRequest(
+                    Method.PUT, coUrl,
+                    { response ->
+                        token = ""
+                        refreshToken = ""
+                        email = ""
+                        password = ""
+                        name = ""
+                        Log.w("Logout", "ID was " + OneSignal.User.pushSubscription.id)
+                        OneSignal.logout()
+                        OneSignal.User.pushSubscription.optOut()
+                    },
+                    {
+                    }
+                ) {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val headers = HashMap<String, String>()
+                        headers["Authorization"] = "Bearer " + token
+                        return headers
+                    }
+                    override fun getBody(): ByteArray {
+                        val params = HashMap<String, HashMap<String, String>>()
+                        var data = HashMap<String, String>()
+                        data["mobile_subscription_token"] = ""
+                        params["data"] = data
+                        return JSONObject(params as Map<*, *>).toString().toByteArray()
+                    }
+                }
+                coQueue.add(coRequest)
         }
 
     }

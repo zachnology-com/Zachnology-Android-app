@@ -1,5 +1,6 @@
 package com.zachnology.app
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.onesignal.OneSignal
 import com.onesignal.debug.LogLevel
 
@@ -39,9 +41,10 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val infl = inflater.inflate(R.layout.fragment_settings, container, false)
-        var button = infl.findViewById<Button>(R.id.button)
-        button.setOnClickListener() {
-            Log.e("OneSignal", OneSignal.User.pushSubscription.id)
+        var logoutButton = infl.findViewById<Button>(R.id.logout_button)
+        logoutButton.setOnClickListener() {
+            IdentityManager.logout(requireContext())
+            Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
         }
 
         return infl
