@@ -1,6 +1,7 @@
 package com.zachnology.app
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources.Theme
 import android.graphics.Color
 import android.os.Bundle
@@ -10,6 +11,10 @@ import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.onesignal.OneSignal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class AuthenticationActivity : AppCompatActivity() {
@@ -40,8 +45,10 @@ class AuthenticationActivity : AppCompatActivity() {
 
         if (storedEmail == null || storedPassword == null) {
             hasPassedSplashScreen = true
-            val intent = android.content.Intent(this, SigninActivity::class.java)
+            val intent = Intent(this, SigninActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+
             finish()
         } else {
             IdentityManager.loginWithCredentials(storedEmail, storedPassword, this, { response ->

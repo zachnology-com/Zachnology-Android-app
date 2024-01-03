@@ -1,8 +1,12 @@
 package com.zachnology.app
 
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,14 +16,17 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.onesignal.OneSignal
 import com.onesignal.debug.LogLevel
+import com.onesignal.notifications.INotificationClickEvent
+import com.onesignal.notifications.INotificationClickListener
 import com.zachnology.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
+import java.util.UUID;
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -64,17 +71,37 @@ class MainActivity : AppCompatActivity() {
         var navController = findNavController(R.id.nav_fragment)
         val sharedPref = getSharedPreferences("loginInformation", MODE_PRIVATE)
 
+        val myUuid = UUID.randomUUID()
+        val myUuidAsString = myUuid.toString()
+
         OneSignal.Debug.logLevel = LogLevel.VERBOSE
         OneSignal.initWithContext(this, AppointmentManager.ONESIGNAL_APP_ID)
-        CoroutineScope(Dispatchers.IO).launch {
-            OneSignal.Notifications.requestPermission(true)
+        val clickListener = object : INotificationClickListener {
+            override fun onClick(event: INotificationClickEvent) {
+               try {
+                   val data = event.notification.additionalData
+                   if(data?.getString("type") == "pending") {
+                       val appointmentId = data.getString("appointmentId")
+                       val intent = Intent(this@MainActivity, EditAppointment::class.java)
+                       intent.putExtra("id", appointmentId)
+                       startActivity(intent)
+                   }
+
+               }
+               catch (e: Exception) {
+                   Log.e("Notifs", "Error parsing notification data")
+               }
+            }
         }
+
+        Log.w("Notifs", "External ID is" + OneSignal.User.externalId)
 
 
 
         if(IdentityManager.token == null) {
             val intent = android.content.Intent(this, AuthenticationActivity::class.java)
             startActivity(intent)
+            finish()
             val content: View = findViewById(android.R.id.content)
             content.viewTreeObserver.addOnPreDrawListener(
                 object : ViewTreeObserver.OnPreDrawListener {
@@ -87,8 +114,15 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
         else {
+            if(OneSignal.Notifications.permission) {
+                OneSignal.User.pushSubscription.optIn()
+            }
+            if((OneSignal.User.externalId).equals("")) {
+                OneSignal.login(myUuidAsString)
+            }
             AuthenticationActivity.hasPassedSplashScreen = true
             binding.bottomNavigation.setupWithNavController(navController!!)
+            OneSignal.Notifications.addClickListener(clickListener)
             val content: View = findViewById(android.R.id.content)
         }
 

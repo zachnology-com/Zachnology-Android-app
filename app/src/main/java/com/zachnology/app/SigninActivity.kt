@@ -4,8 +4,15 @@ import android.content.DialogInterface
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
+import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.onesignal.OneSignal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.UUID
 
 class SigninActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +28,28 @@ class SigninActivity : AppCompatActivity() {
         var statusText = findViewById<android.widget.TextView>(R.id.status)
         var email = findViewById<android.widget.EditText>(R.id.emailInput)
         var password = findViewById<android.widget.EditText>(R.id.passwordInput)
+
+        val myUuid = UUID.randomUUID()
+        val myUuidAsString = myUuid.toString()
+
+        if(!OneSignal.Notifications.permission) {
+            MaterialAlertDialogBuilder(this, R.style.Base_Theme_Zachnology_AlertDialog)
+                .setTitle("Notification Permission")
+                .setMessage("We use notifications to send you reminders and alerts about your appointments. Please enable notifications to continue.")
+                .setPositiveButton("OK") { dialog, which ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if((OneSignal.User.externalId).equals("")) {
+                            OneSignal.login(myUuidAsString)
+                        }
+                        OneSignal.Notifications.requestPermission(true)
+                        OneSignal.User.pushSubscription.optIn()
+                    }
+                }
+                .setNegativeButton("Cancel") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
 
         if (status != null) {
 //            statusText.text = status

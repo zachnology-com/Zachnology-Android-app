@@ -60,7 +60,7 @@ class IdentityManager {
                             override fun getBody(): ByteArray {
                                 val params = HashMap<String, HashMap<String, String>>()
                                 var data = HashMap<String, String>()
-                                data["mobile_subscription_token"] = OneSignal.User.pushSubscription.id
+                                data["mobile_subscription_token"] = OneSignal.User.externalId
                                 params["data"] = data
                                 return JSONObject(params as Map<*, *>).toString().toByteArray()
                             }
@@ -87,9 +87,9 @@ class IdentityManager {
                         email = ""
                         password = ""
                         name = ""
-                        Log.w("Logout", "ID was " + OneSignal.User.pushSubscription.id)
+                        Log.w("Notifs", "ID was " + OneSignal.User.pushSubscription.id)
                         OneSignal.logout()
-                        OneSignal.User.pushSubscription.optOut()
+                        Log.w("Notifs", "ID is now " + OneSignal.User.pushSubscription.id)
                     },
                     {
                     }
