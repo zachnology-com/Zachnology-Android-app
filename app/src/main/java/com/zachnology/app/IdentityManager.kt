@@ -1,5 +1,7 @@
 package com.zachnology.app
 
+import android.accounts.Account
+import android.accounts.AccountManager
 import android.content.Context
 import android.util.Log
 import com.android.volley.Request
@@ -28,7 +30,14 @@ class IdentityManager {
         var hasPassedSplashScreen: Boolean = false
 
 
-        fun loginWithCredentials(email:String, password:String, context: Context, successFunction: (response: String) -> (Unit), failureFunction: () -> (Unit)) {
+        fun loginWithCredentials(
+            email: String,
+            password: String,
+            context: Context,
+            successFunction: (response: String) -> (Unit),
+            failureFunction: () -> (Unit)
+        ) {
+            var accountManager = AccountManager.get(context)
             var queue = Volley.newRequestQueue(context)
             var identityUrl =
                 Constants.URL_ROOT + "/.netlify/identity/token?grant_type=password&username=" + email + "&password=" + password;
@@ -57,6 +66,7 @@ class IdentityManager {
                                 headers["Authorization"] = "Bearer " + token
                                 return headers
                             }
+
                             override fun getBody(): ByteArray {
                                 val params = HashMap<String, HashMap<String, String>>()
                                 var data = HashMap<String, String>()
@@ -68,6 +78,15 @@ class IdentityManager {
                         coQueue.add(coRequest)
 
                     }
+                    if (accountManager.accounts.isEmpty()) {
+                        var currentAccount = Account(email, "com.zachnology")
+                        accountManager.addAccountExplicitly(currentAccount, password, null)
+                        accountManager.setAuthToken(currentAccount, "com.zachnology", token)
+                    } else {
+                        var currentAccount = accountManager.accounts[0]
+                        accountManager.setPassword(currentAccount, password)
+                        accountManager.setAuthToken(currentAccount, "com.zachnology", token)
+                    }
                     successFunction(response)
                 },
                 {
@@ -77,37 +96,43 @@ class IdentityManager {
         }
 
         fun logout(context: Context) {
-                var coQueue = Volley.newRequestQueue(context)
-                var coUrl = Constants.URL_ROOT + "/.netlify/identity/user"
-                var coRequest = object : StringRequest(
-                    Method.PUT, coUrl,
-                    { response ->
-                        token = ""
-                        refreshToken = ""
-                        email = ""
-                        password = ""
-                        name = ""
-                        Log.w("Notifs", "ID was " + OneSignal.User.pushSubscription.id)
-                        OneSignal.logout()
-                        Log.w("Notifs", "ID is now " + OneSignal.User.pushSubscription.id)
-                    },
-                    {
-                    }
-                ) {
-                    override fun getHeaders(): MutableMap<String, String> {
-                        val headers = HashMap<String, String>()
-                        headers["Authorization"] = "Bearer " + token
-                        return headers
-                    }
-                    override fun getBody(): ByteArray {
-                        val params = HashMap<String, HashMap<String, String>>()
-                        var data = HashMap<String, String>()
-                        data["mobile_subscription_token"] = ""
-                        params["data"] = data
-                        return JSONObject(params as Map<*, *>).toString().toByteArray()
-                    }
+            var accountManager = AccountManager.get(context)
+            var coQueue = Volley.newRequestQueue(context)
+            var coUrl = Constants.URL_ROOT + "/.netlify/identity/user"
+            var coRequest = object : StringRequest(
+                Method.PUT, coUrl,
+                { response ->
+                    token = ""
+                    refreshToken = ""
+                    email = ""
+                    password = ""
+                    name = ""
+                    Log.w("Notifs", "ID was " + OneSignal.User.pushSubscription.id)
+                    OneSignal.logout()
+                    Log.w("Notifs", "ID is now " + OneSignal.User.pushSubscription.id)
+                },
+                {
                 }
-                coQueue.add(coRequest)
+            ) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer " + token
+                    return headers
+                }
+
+                override fun getBody(): ByteArray {
+                    val params = HashMap<String, HashMap<String, String>>()
+                    var data = HashMap<String, String>()
+                    data["mobile_subscription_token"] = ""
+                    params["data"] = data
+                    return JSONObject(params as Map<*, *>).toString().toByteArray()
+                }
+            }
+            coQueue.add(coRequest)
+            if (accountManager.accounts.isNotEmpty())
+                accountManager.removeAccountExplicitly(accountManager.accounts[0])
+
+
         }
 
     }

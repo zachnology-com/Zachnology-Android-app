@@ -1,6 +1,7 @@
 package com.zachnology.app
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.card.MaterialCardView
 import com.onesignal.OneSignal
 import com.onesignal.debug.LogLevel
 
@@ -41,10 +43,20 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val infl = inflater.inflate(R.layout.fragment_settings, container, false)
-        var logoutButton = infl.findViewById<Button>(R.id.logout_button)
-        logoutButton.setOnClickListener() {
-            IdentityManager.logout(requireContext())
-            Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
+        var accountSettingsButton = infl.findViewById<MaterialCardView>(R.id.accountCard)
+        var logOutButton = infl.findViewById<MaterialCardView>(R.id.logOutCard)
+        accountSettingsButton.setOnClickListener(View.OnClickListener {
+//            var intent = Intent(activity, AccountSettingsActivity::class.java)
+//            startActivity(intent)
+
+        })
+
+        logOutButton.setOnClickListener() {
+            IdentityManager.logout(context as Context)
+            val intent = Intent(activity?.baseContext, AuthenticationActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            activity?.finish()
         }
 
         return infl

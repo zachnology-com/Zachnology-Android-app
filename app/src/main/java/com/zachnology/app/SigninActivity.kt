@@ -1,12 +1,11 @@
 package com.zachnology.app
 
-import android.content.DialogInterface
+import android.accounts.Account
+import android.accounts.AccountManager
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Looper
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.onesignal.OneSignal
 import kotlinx.coroutines.CoroutineScope
@@ -69,9 +68,6 @@ class SigninActivity : AppCompatActivity() {
                 password.text.toString(),
                 this,
                 { response ->
-                    sharedPref.edit().putString("email", email.text.toString()).commit()
-                    sharedPref.edit().putString("password", password.text.toString()).commit()
-//                    statusText.text = "Logged in!"
                     loggingInDialog.dismiss()
                     val intent = android.content.Intent(this, AuthenticationActivity::class.java)
                     startActivity(intent)

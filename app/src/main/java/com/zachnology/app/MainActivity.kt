@@ -103,14 +103,19 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
             val content: View = findViewById(android.R.id.content)
-            content.viewTreeObserver.addOnPreDrawListener(
-                object : ViewTreeObserver.OnPreDrawListener {
-                    override fun onPreDraw(): Boolean {
-                        // Check whether the initial data is ready.
-                        return AuthenticationActivity.hasPassedSplashScreen
+            //if sdk is greater than or equal to 31
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // Check whether the initial data is ready.
+                content.viewTreeObserver.addOnPreDrawListener(
+                    object : ViewTreeObserver.OnPreDrawListener {
+                        override fun onPreDraw(): Boolean {
+                            // Check whether the initial data is ready.
+                            return AuthenticationActivity.hasPassedSplashScreen
+                        }
                     }
-                }
-            )
+                )
+            }
+
             finish()
         }
         else {

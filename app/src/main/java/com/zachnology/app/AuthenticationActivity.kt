@@ -1,10 +1,13 @@
 package com.zachnology.app
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources.Theme
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.Window
@@ -24,34 +27,37 @@ class AuthenticationActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        var accountManager = AccountManager.get(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
         val sharedPref = getSharedPreferences("loginInformation", MODE_PRIVATE)
         val editor = sharedPref.edit()
         val content: View = findViewById(android.R.id.content)
-        content.viewTreeObserver.addOnPreDrawListener(
-            object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    return hasPassedSplashScreen
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            content.viewTreeObserver.addOnPreDrawListener(
+                object : ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        return hasPassedSplashScreen
+                    }
                 }
-            }
-        )
+            )
+        }
 
         var cover = findViewById<android.widget.ImageView>(R.id.coverImage)
         var loading = findViewById<android.widget.ProgressBar>(R.id.progressBar)
-        var storedEmail = sharedPref.getString("email", null)
-        var storedPassword = sharedPref.getString("password", null)
 
 
-        if (storedEmail == null || storedPassword == null) {
+        if (accountManager.accounts.isEmpty()) {
             hasPassedSplashScreen = true
             val intent = Intent(this, SigninActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+            Log.e("Auth", "No accounts found")
 
             finish()
         } else {
-            IdentityManager.loginWithCredentials(storedEmail, storedPassword, this, { response ->
+            var thisAccount = accountManager.accounts[0];
+            IdentityManager.loginWithCredentials(thisAccount.name, accountManager.getPassword(thisAccount), this, { response ->
                 AppointmentManager.getAllAppointments(this, { response ->
                     val intent = android.content.Intent(this, MainActivity::class.java)
                     startActivity(intent)
