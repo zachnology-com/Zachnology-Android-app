@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 
@@ -17,6 +18,7 @@ class NewAppointment : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_appointment)
 
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         val categoryInput = findViewById<AutoCompleteTextView>(R.id.category_input)
         val descriptionInput = findViewById<TextInputEditText>(R.id.description_input)
         val contactMethodInput = findViewById<TextInputEditText>(R.id.contact_method_input)
@@ -33,6 +35,11 @@ class NewAppointment : AppCompatActivity() {
         )
         val adapter = ArrayAdapter(this, R.layout.list_item, items)
         (categoryInput)?.setAdapter(adapter)
+
+
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
 
         submitButton.setOnClickListener() {
             var submittingDialog = MaterialAlertDialogBuilder(
